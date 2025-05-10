@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import cv2
 import numpy as np
 import base64
@@ -6,7 +6,9 @@ from detect import detect_gender_age
 import re
 
 app = Flask(__name__)
-
+@app.route('/')
+def index():
+    return render_template('index.html')
 @app.route("/process_frame", methods=["POST"])
 def process_frame():
     data = request.get_json()
