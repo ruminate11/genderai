@@ -28,4 +28,7 @@ def process_frame():
     return jsonify({'image': 'data:image/jpeg;base64,' + processed_data})
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Change debug=False when deploying to production
+    import os
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0', port=port)
+  # Change debug=False when deploying to production
