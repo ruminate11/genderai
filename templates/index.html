@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgenderAi</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f8f9fa;
+        color: #4c3a69;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+        background-color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #5f3dc4;
+      }
+
+      .search-box input {
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        outline: none;
+      }
+
+      section {
+        padding: 60px 20px;
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      h2 {
+        text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        color: #3c2768;
+      }
+
+      .video-section {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 40px auto;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .video-box {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+        text-align: center;
+        width: 320px;
+      }
+
+      .video-box video,
+      .video-box img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+      }
+
+      .video-box h3 {
+        margin: 15px 0;
+        font-size: 1.1rem;
+        color: #5b4b8a;
+      }
+
+      .detect-button {
+        display: block;
+        margin: 30px auto;
+        padding: 12px 30px;
+        background-color: #5f3dc4;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .detect-button:hover {
+        background-color: #4c2fa6;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        margin-top: 40px;
+      }
+
+      .feature-box {
+        background: white;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        width: 280px;
+        text-align: center;
+      }
+
+      .feature-box svg {
+        margin-bottom: 15px;
+      }
+
+      .feature-box h3 {
+        color: #4c3a69;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+
+      .feature-box p {
+        color: #555;
+        font-size: 0.95rem;
+      }
+
+      footer {
+        background-color: #ece7f9;
+        padding: 40px 20px;
+        text-align: center;
+        color: #6c4ab3;
+        font-size: 0.95rem;
+        margin-top: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>AgenderAi</h1>
+      <div class="search-box">
+        <input type="text" placeholder="Search..." />
+      </div>
+    </header>
+
+    <!-- Section: Detection -->
+    <section>
+      <h2>Real-Time Gender & Age Detection</h2>
+      <div class="video-section">
+        <div class="video-box">
+          <h3>Input - Live Camera</h3>
+          <video id="video" autoplay muted></video>
+        </div>
+        <div class="video-box">
+          <h3>Output - Prediction</h3>
+          <img id="output" />
+        </div>
+      </div>
+      <button class="detect-button" onclick="startDetection()">
+        Start Detection
+      </button>
+    </section>
+
+    <!-- Section: How it works -->
+    <section>
+      <h2>How Age & Gender Detection Works</h2>
+      <p
+        style="text-align: center; max-width: 700px; margin: auto; color: #666"
+      >
+        Our AI model uses advanced deep learning to detect facial patterns and
+        classify gender and estimated age based on visual cues.
+      </p>
+      <div class="features">
+        <div class="feature-box">
+          <svg
+            height="100"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="20" r="12" fill="#A78BFA" />
+            <path
+              d="M16 52c0-8.837 7.163-16 16-16s16 7.163 16 16"
+              fill="#A78BFA"
+            />
+          </svg>
+          <h3>Face Detection</h3>
+          <p>We locate and crop the facial region from the video feed.</p>
+        </div>
+        <div class="feature-box">
+          <svg
+            height="100"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect x="12" y="12" width="40" height="40" rx="8" fill="#C084FC" />
+            <circle cx="32" cy="32" r="6" fill="white" />
+          </svg>
+          <h3>Feature Extraction</h3>
+          <p>
+            Facial features like eyes, lips, and jawlines are extracted using
+            convolutional filters.
+          </p>
+        </div>
+        <div class="feature-box">
+          <svg
+            height="100"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M32 12l16 16-16 16-16-16 16-16z" fill="#A855F7" />
+            <text
+              x="32"
+              y="38"
+              font-size="10"
+              fill="white"
+              text-anchor="middle"
+            >
+              AI
+            </text>
+          </svg>
+          <h3>Prediction</h3>
+          <p>
+            Based on trained data, we classify the gender and predict the age
+            range.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      &copy; 2025 AgenderAi. All rights reserved | Built with ♥ for AI
+      innovation
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+      const video = document.getElementById("video");
+      const canvas = document.createElement("canvas");
+      const output = document.getElementById("output");
+
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((error) => {
+          console.error("Webcam access error: ", error);
+        });
+
+      function captureFrame() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL("image/jpeg");
+
+        fetch("/process_frame", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: dataURL }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            output.src = data.image;
+          })
+          .catch((err) => {
+            console.error("Detection error:", err);
+          });
+      }
+
+      function startDetection() {
+        setInterval(captureFrame, 1000); // Every second
+      }
+    </script>
+  </body>
+</html>
