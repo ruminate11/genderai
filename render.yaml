@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: genderai
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      mkdir -p models
+      curl -L -o models/age_net.caffemodel "https://drive.google.com/uc?export=download&id=1vPfxMRqSNP4GIMF5LXiGSowDuIDhbTWf"
+      curl -L -o models/gender_net.caffemodel "https://drive.google.com/uc?export=download&id=10aa3xTO6zGuSl-8bscbJxXxHFpqA_DpW"
+      # add curl for other model files too
+    startCommand: gunicorn app:app
