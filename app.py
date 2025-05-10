@@ -1,31 +1,30 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 import cv2
 import numpy as np
 import base64
-from detect import detect_gender_age  # Importing the detect_gender_age function from detect.py
+from detect import detect_gender_age
+import re
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')  # Make sure index.html is present in the 'templates' folder
-
-@app.route('/process_frame', methods=['POST'])
+@app.route("/process_frame", methods=["POST"])
 def process_frame():
-    data = request.json['image']
-    # Decode the base64 image
-    encoded_data = data.split(',')[1]
-    nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
+    data = request.get_json()
+    image_data = re.sub('^data:image/.+;base64,', '', data['image'])
+    image_bytes = base64.b64decode(image_data)
+    nparr = np.frombuffer(image_bytes, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    # Process the frame with detect_gender_age function from detect.py
-    processed_frame, results = detect_gender_age(frame)
-    
-    # Encode the processed frame back to base64
-    _, buffer = cv2.imencode('.jpg', processed_frame)
-    processed_data = base64.b64encode(buffer).decode('utf-8')
+    result_img, results = detect_gender_age(frame)
 
-    return jsonify({'image': 'data:image/jpeg;base64,' + processed_data})
+    _, buffer = cv2.imencode('.jpg', result_img)
+    img_str = base64.b64encode(buffer).decode('utf-8')
+    img_data_url = f"data:image/jpeg;base64,{img_str}"
+
+    return jsonify({
+        "image": img_data_url,
+        "prediction": results  # <-- Send predictions as well
+    })
 
 if __name__ == "__main__":
     import os
