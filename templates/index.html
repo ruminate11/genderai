@@ -167,6 +167,7 @@
         <div class="video-box">
           <h3>Output - Prediction</h3>
           <img id="output" />
+          <p id="prediction-text" style="margin-top: 10px; color: #5b4b8a;"></p>
         </div>
       </div>
       <button class="detect-button" onclick="startDetection()">
@@ -281,6 +282,12 @@
           .then((res) => res.json())
           .then((data) => {
             output.src = data.image;
+            const predictionText = document.getElementById("prediction-text");
+  if (Array.isArray(data.prediction)) {
+    predictionText.textContent = data.prediction.join(", ");
+  } else {
+    predictionText.textContent = data.prediction; // like "No face detected"
+  }
           })
           .catch((err) => {
             console.error("Detection error:", err);
