@@ -60,7 +60,7 @@ ageNet = cv2.dnn.readNet(ageModel, ageProto)
 genderNet = cv2.dnn.readNet(genderModel, genderProto)
 
 # --- Detection logic ---
-def highlightFace(net, frame, conf_threshold=0.7):
+def highlightFace(net, frame, conf_threshold=0.5):
     frameOpencvDnn = frame.copy()
     frameHeight = frameOpencvDnn.shape[0]
     frameWidth = frameOpencvDnn.shape[1]
