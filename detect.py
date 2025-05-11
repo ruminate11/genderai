@@ -6,10 +6,10 @@ import requests
 # --- Function to download files from Google Drive ---
 def download_from_gdrive(file_id, destination):
     if os.path.exists(destination):
-        print(f"{destination} already exists.")
+        print(f"✅ {destination} already exists.")
         return
 
-    print(f"Downloading {destination} from Google Drive...")
+    print(f"⬇️ Downloading {destination} from Google Drive...")
     URL = "https://drive.google.com/uc?export=download"
     session = requests.Session()
     response = session.get(URL, params={'id': file_id}, stream=True)
@@ -26,11 +26,14 @@ def download_from_gdrive(file_id, destination):
         params = {'id': file_id, 'confirm': token}
         response = session.get(URL, params=params, stream=True)
 
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
-    print(f"{destination} downloaded.")
+    try:
+        with open(destination, "wb") as f:
+            for chunk in response.iter_content(32768):
+                if chunk:
+                    f.write(chunk)
+        print(f"✅ Downloaded {destination} successfully.")
+    except Exception as e:
+        print(f"❌ Failed to download {destination}: {str(e)}")
 
 # --- Google Drive File IDs ---
 files = {
@@ -38,7 +41,7 @@ files = {
     "gender_net.caffemodel": "10aa3xTO6zGuSl-8bscbJxXxHFpqA_DpWf",
 }
 
-# Download missing files
+# --- Download missing files ---
 for filename, file_id in files.items():
     download_from_gdrive(file_id, filename)
 
@@ -54,13 +57,18 @@ MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
 ageList = ['(0-2)', '(4-6)', '(8-12)', '(15-20)', '(25-32)', '(38-43)', '(48-53)', '(60-100)']
 genderList = ['Male', 'Female']
 
-# Load models
-faceNet = cv2.dnn.readNet(faceModel, faceProto)
-ageNet = cv2.dnn.readNet(ageModel, ageProto)
-genderNet = cv2.dnn.readNet(genderModel, genderProto)
+# --- Load models ---
+print("📦 Loading models...")
+try:
+    faceNet = cv2.dnn.readNet(faceModel, faceProto)
+    ageNet = cv2.dnn.readNet(ageModel, ageProto)
+    genderNet = cv2.dnn.readNet(genderModel, genderProto)
+    print("✅ All models loaded successfully!")
+except Exception as e:
+    print("❌ Model loading failed:", str(e))
 
 # --- Detection logic ---
-def highlightFace(net, frame, conf_threshold=0.5):
+def highlightFace(net, frame, conf_threshold=0.7):
     frameOpencvDnn = frame.copy()
     frameHeight = frameOpencvDnn.shape[0]
     frameWidth = frameOpencvDnn.shape[1]
